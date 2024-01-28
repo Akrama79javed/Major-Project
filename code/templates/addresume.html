@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Resume</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+</head>
+<body>
+    <h1>Add Resume</h1>
+    <form action="/submit_resume" method="post" enctype="multipart/form-data">
+        <label for="pdfFile">PDF File:</label><br>
+        <input type="hidden" name="formtype" value="pdf">
+        <input type="file" id="pdfFile" name="pdfFile" accept=".pdf"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <form action="/submit_resume" method="post" enctype="multipart/form-data">
+        <label for="pdfFile">Doc File:</label><br>
+        <input type="hidden" name="formtype" value="doc">
+        <input type="file" id="docfile" name="docfile" accept=".docx"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+</body>
+</html>

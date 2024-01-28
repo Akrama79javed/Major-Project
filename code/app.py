@@ -34,7 +34,31 @@ def register():
         add_to_db(user)
     return render_template('register.html')
 
+@app.route('/resume/add', methods=['GET', 'POST'])
+def resumeadd():
+    if request.method == 'POST':
+        filetype = request.form.get('filetype')
+        if filetype == 'pdf':
+            pdffile = request.form.get('pdffile')
+            print("pdf file =>", pdffile)
+        elif filetype == 'doc':
+            wordfile = request.form.get('docfile')
+            print("word file =>", wordfile)
+        # logic
+    return render_template('addresume.html')
+
+@app.route('/job/add', methods=['GET', 'POST'])
+def jobadd():
+    if request.method == 'POST':
+        addjob = request.form.get('add job')
+        jobdiscription = request.form.get('job discription')
+        print("add job =>", addjob)
+        print("job discripttion =>", jobdiscription)
+        # logic
+    return render_template('addjob.html')
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8000, debug=True)
  
+
  

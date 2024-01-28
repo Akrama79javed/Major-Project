@@ -1,0 +1,101 @@
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  h1 {
+    font-size: 2.5em;
+    color: #333;
+    text-shadow: 1px 1px #ccc;
+    margin-bottom: 2em;
+  }
+  
+  .file-input {
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .file-input:focus {
+    box-shadow: 0px 0px 10px 2px rgba(0,0,0,0.2);
+  }
+  
+  .submit-button {
+    display: block;
+    width: 100%;
+    padding: 0.5em;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .submit-button:hover {
+    background-color: #3e8e41;
+  }
+  
+  .eye {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    animation: eye-animation 2s ease-in-out infinite;
+  }
+  
+  .eye:nth-child(2) {
+    animation-delay: 1s;
+  }
+  
+  @keyframes eye-animation {
+    0% {
+      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+    }
+    50% {
+      box-shadow: 0px 0px 20px 5px rgba(0,0,0,0.5);
+    }
+    100% {
+      box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.1);
+    }
+  }
+  
+  .glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    box-shadow: 0px 0px 20px 5px rgba(0,255,0,0.5);
+    opacity: 0;
+    animation: glow-animation 2s ease-in-out infinite;
+  }
+  
+  .glow:nth-child(2) {
+    animation-delay: 1s;
+  }
+  
+  @keyframes glow-animation {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
