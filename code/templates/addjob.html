@@ -1,16 +1,86 @@
+{% extends 'layout/base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/styles.css">
+{% endblock %}
+
+
+
+{% block content %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Job</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Job</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    form {
+      width: 300px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    input[type="submit"] {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
-    <h1>Add Job</h1>
-    <form>
-        <label for="jobDescription">Job Description:</label><br>
-        <textarea id="jobDescription" name="jobDescription" rows="4" cols="50">
-        </textarea>
-        <br>
-        <input type="submit" value="Submit">
-    </form>
+  <h1>Add Job</h1>
+  <form action="/submit_job" method="post">
+    <label for="jobTitle">Job Title:</label><br>
+    <input type="text" id="jobTitle" name="jobTitle" required><br>
+    <label for="jobDescription">Job Description:</label><br>
+    <textarea id="jobDescription" name="jobDescription" rows="4" cols="50" required></textarea><br>
+    <label for="jobLocation">Job Location:</label><br>
+    <input type="text" id="jobLocation" name="jobLocation" required><br>
+    <label for="jobType">Job Type:</label><br>
+    <select id="jobType" name="jobType" required>
+      <option value="">Select Job Type</option>
+      <option value="full-time">Full Time</option>
+      <option value="part-time">Part Time</option>
+      <option value="contract">Contract</option>
+    </select><br>
+    <input type="submit" value="Submit">
+  </form>
 </body>
 </html>
+{% endblock %}

@@ -1,24 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Resume</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles.css">
-</head>
-<body>
-    <h1>Add Resume</h1>
-    <form action="/submit_resume" method="post" enctype="multipart/form-data">
-        <label for="pdfFile">PDF File:</label><br>
-        <input type="hidden" name="formtype" value="pdf">
-        <input type="file" id="pdfFile" name="pdfFile" accept=".pdf"><br>
-        <input type="submit" value="Submit">
-    </form>
+{% extends 'layout/base.html' %}
 
-    <form action="/submit_resume" method="post" enctype="multipart/form-data">
-        <label for="pdfFile">Doc File:</label><br>
-        <input type="hidden" name="formtype" value="doc">
-        <input type="file" id="docfile" name="docfile" accept=".docx"><br>
-        <input type="submit" value="Submit">
-    </form>
+{% block css %}
+<link rel="stylesheet" href="/static/styles.css">
+{% endblock %}
 
-</body>
-</html>
+
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col">
+            <h1>Add Resume</h1>
+        </div>
+    </div>
+</div>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body pdfcard">
+                    <form action="/submit_resume" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="formtype" value="pdf">
+                        <div class="mb-3 input-group">
+                            <input type="file" class="form-control" name="pdffile" id="pdffile" placeholder="pdffile"
+                                aria-describedby="pdffileHelpId" />
+                            <button type="submit" class="btn btn-primary">
+                                Upload
+                            </button>
+                        </div>
+                        <div id="pdffileHelpId" class="form-text">Only upload a valid pdf file</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body doccard">
+                    <form action="/submit_resume" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="formtype" value="doc">
+                        <div class="mb-3 input-group">
+                            <input type="file" class="form-control" name="docfile" id="docfile" placeholder="docfile"
+                                aria-describedby="pdffileHelpId" />
+                            <button type="submit" class="btn btn-primary">
+                                Upload
+                            </button>
+                        </div>
+                        <div id="pdffileHelpId" class="form-text">Only upload a valid doc file</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
