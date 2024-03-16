@@ -15,8 +15,28 @@ def login():
         password = request.form.get('password')
         print("Email =>", email)
         print("Password =>", password)
-        # logic
+        if email and password:
+            db = open_db()
+            user = db.query(User).filter(email=email)
+            if user is not None and user.password == password:
+                session['isauth'] = True
+                session['id'] = user.id
+                session['email'] = user.email
+                session['username'] = user.username
+                flash('You are logged In', 'success')
+                
+                return redirect('/')
+            else:
+                flash('credentials do not match', 'danger')
+        else:
+            flash('email and password cant be empty','danger')
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    if session.get('isauth'):   
+        session.clear()
+    return redirect('/login')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
