@@ -63,10 +63,10 @@ def resumeadd():
     if request.method == 'POST':
         filetype = request.form.get('formtype')
         if filetype == 'pdf':
-            pdffile = request.form.get('pdffile')
+            pdffile = request.files.get('pdffile')
             filename = secure_filename(pdffile.filename)
             if filename != '':
-                if os.path.exists(app.config('UPLOAD_PATH')):
+                if not os.path.exists(app.config['UPLOAD_PATH']):
                     os.makedirs(app.config['UPLOAD_PATH'])
                 path = os.path.join(app.config['UPLOAD_PATH'],filename)     # make os compatible path string
                 try:
@@ -76,6 +76,8 @@ def resumeadd():
                 except Exception as e:
                     print(e)
                     return redirect('/resume/add')
+            else:
+                print('filename is empty')
         elif filetype == 'doc':
             wordfile = request.form.get('docfile')
             print("word file =>", wordfile)
