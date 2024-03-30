@@ -27,6 +27,20 @@ class File(Base):
 
     def __str__(self):
         return self.path
+    
+class Job(Base):
+    __tablename__ = 'job'
+    id = Column(Integer, primary_key=True)
+    job_title = Column(String(65),nullable=False)  
+    job_description = Column(String(650),nullable=False)  
+    job_location = Column(String(65),nullable=False)  
+    job_type = Column(String(65),nullable=False) 
+    created_at = Column(DateTime, default=datetime.now)
+
+    def __str__(self):
+        return self.path
+
+   
 
 # more classes for other tables
     

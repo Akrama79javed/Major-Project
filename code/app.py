@@ -1,8 +1,12 @@
 from flask import Flask, render_template,redirect,request, flash, session
-from database import User, add_to_db, open_db
+from database import User, add_to_db, open_db, File, open_db, Job
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 app.secret_key = 'thisissupersecretkeyfornoone'
+
+app.config['UPLOAD_PATH'] = 'static/uploads'
 
 @app.route('/')
 def index():
@@ -57,10 +61,21 @@ def register():
 @app.route('/resume/add', methods=['GET', 'POST'])
 def resumeadd():
     if request.method == 'POST':
-        filetype = request.form.get('filetype')
+        filetype = request.form.get('formtype')
         if filetype == 'pdf':
             pdffile = request.form.get('pdffile')
-            print("pdf file =>", pdffile)
+            filename = secure_filename(pdffile.filename)
+            if filename != '':
+                if os.path.exists(app.config('UPLOAD_PATH')):
+                    os.makedirs(app.config['UPLOAD_PATH'])
+                path = os.path.join(app.config['UPLOAD_PATH'],filename)     # make os compatible path string
+                try:
+                    pdffile.save(path)
+                    add_to_db(File(path=path, user_id=session.get('id', 1)))
+                    return redirect('/resume/add')
+                except Exception as e:
+                    print(e)
+                    return redirect('/resume/add')
         elif filetype == 'doc':
             wordfile = request.form.get('docfile')
             print("word file =>", wordfile)
@@ -70,12 +85,29 @@ def resumeadd():
 @app.route('/job/add', methods=['GET', 'POST'])
 def jobadd():
     if request.method == 'POST':
-        addjob = request.form.get('add job')
-        jobdiscription = request.form.get('job discription')
-        print("add job =>", addjob)
-        print("job discripttion =>", jobdiscription)
+        jobTitle = request.form.get('jobTitle')
+        jobDescription= request.form.get('jobDescription')
+        jobLocation = request.form.get('jobLocation')
+        jobType = request.form.get('jobType')
+        print("jobTitle =>", jobTitle)
+        print("jobDescription =>", jobDescription)
+        print("jobLocation  =>", jobLocation )
+        print("jobType =>", jobType)
         # logic
+        if len(jobTitle) == 0 or len(jobDescription) == 0 or len(jobLocation) == 0 or len(jobType) == 0:
+            flash("All fields are required", 'danger')
+            return redirect('/register') # reload the page
+        job = Job(job_title=jobTitle, job_description=jobDescription, job_location=jobLocation, job_type=jobType)
+        add_to_db(job)
+        flash('job aded', 'success')
+        return redirect('/job/list')
     return render_template('addjob.html')
+
+@app.route('/job/list')
+def job_list():
+    db = open_db()
+    jobs = db.query(Job).all()
+    return render_template('joblist.html', jobs=jobs)
 
 
 if __name__ == '__main__':
