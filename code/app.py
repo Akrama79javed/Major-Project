@@ -10,7 +10,17 @@ app.config['UPLOAD_PATH'] = 'static/uploads'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # check login
+    if not session.get('isauth'):
+        return redirect('/login')
+    if session.get('isadmin'):
+        jobs = open_db().query(Job).all()
+        resumes = open_db().query(File).all()
+        return render_template('index.html', jobs=jobs, resumes=resumes)
+    else:
+        resumes = open_db().query(File).filter(File.user_id==session.get('id', 1)).all()
+        return render_template('index.html', resumes=resumes)
+    
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -21,12 +31,14 @@ def login():
         print("Password =>", password)
         if email and password:
             db = open_db()
-            user = db.query(User).filter(email=email)
+            user = db.query(User).filter(User.email==email).first()
             if user is not None and user.password == password:
                 session['isauth'] = True
                 session['id'] = user.id
                 session['email'] = user.email
                 session['username'] = user.username
+                if user.username == 'admin':
+                    session['isadmin'] = True
                 flash('You are logged In', 'success')
                 
                 return redirect('/')
@@ -72,18 +84,46 @@ def resumeadd():
                 try:
                     pdffile.save(path)
                     add_to_db(File(path=path, user_id=session.get('id', 1)))
+                    flash('File uploaded', 'success')
                     return redirect('/resume/add')
                 except Exception as e:
                     print(e)
+                    flash('File not uploaded', 'danger')
                     return redirect('/resume/add')
             else:
+                flash('filename is empty')
                 print('filename is empty')
-        elif filetype == 'doc':
-            wordfile = request.form.get('docfile')
-            print("word file =>", wordfile)
-        # logic
-    return render_template('addresume.html')
+    # load all saved resumes from the user
+    db = open_db()
+    files = db.query(File).filter(File.user_id==session.get('id', 1)).all()
+    return render_template('addresume.html', resumes=files)
 
+# delete resume
+@app.route('/resume/delete/<int:id>')
+def resumedelete(id):
+    db = open_db()
+    file = db.query(File).filter(File.id==id).first()
+    if file is not None:
+        try:
+            os.remove(file.path)
+            db.delete(file)
+            db.commit()
+            flash('File deleted', 'success')
+        except Exception as e:
+            print(e)
+            flash('File not deleted', 'danger')
+    return redirect('/resume/add')
+
+# view resume
+@app.route('/resume/view/<int:id>')
+def resumeview(id):
+    db = open_db()
+    file = db.query(File).filter(File.id==id).first()
+    if file is not None:
+        return render_template('viewresume.html', file=file)
+    return redirect('/resume/add')
+
+# edit resume
 @app.route('/job/add', methods=['GET', 'POST'])
 def jobadd():
     if request.method == 'POST':
@@ -110,6 +150,30 @@ def job_list():
     db = open_db()
     jobs = db.query(Job).all()
     return render_template('joblist.html', jobs=jobs)
+
+# delete job
+@app.route('/job/delete/<int:id>')
+def jobdelete(id):
+    db = open_db()
+    job = db.query(Job).filter(Job.id==id).first()
+    if job is not None:
+        try:
+            db.delete(job)
+            db.commit()
+            flash('Job deleted', 'success')
+        except Exception as e:
+            print(e)
+            flash('Job not deleted', 'danger')
+    return redirect('/job/list')
+
+# view job
+@app.route('/job/view/<int:id>')
+def jobview(id):
+    db = open_db()
+    job = db.query(Job).filter(Job.id==id).first()
+    if job is not None:
+        return render_template('viewjob.html', job=job)
+    return redirect('/job/list')
 
 
 if __name__ == '__main__':
